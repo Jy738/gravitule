@@ -1,0 +1,148 @@
+<!DOCTYPE html><html>
+  <head>
+    
+  </head>
+  <body>
+    <script>
+      // 2D Planetary Gravity Simulation
+class Planet {
+  constructor(x, y, mass, velocityX, velocityY, color) {
+    this.x = x;
+    this.y = y;
+    this.mass = mass;
+    this.velocityX = velocityX;
+    this.velocityY = velocityY;
+    this.radius = Math.sqrt(mass) * 2; // Size based on mass
+    this.color = color;
+  }
+
+  // Draw the planet on the canvas
+  draw(ctx) {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.closePath();
+  }
+}
+
+// Gravitational simulation
+class GravitySimulation {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    this.planets = [];
+    this.G = 0.1; // Gravitational constant (adjusted for simulation scale)
+    this.timeStep = 0.1; // Simulation speed
+    
+    // Set canvas size
+    this.canvas.width = window.innerWidth - 20;
+    this.canvas.height = window.innerHeight - 20;
+  }
+
+  // Add a planet to the simulation
+  addPlanet(x, y, mass, velocityX, velocityY, color) {
+    const planet = new Planet(x, y, mass, velocityX, velocityY, color);
+    this.planets.push(planet);
+  }
+
+  // Calculate gravitational force between two planets
+  calculateGravitationalForce(planet1, planet2) {
+    // Calculate distance between the planets
+    const dx = planet2.x - planet1.x;
+    const dy = planet2.y - planet1.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    // Avoid division by zero or extremely small values
+    if (distance < 0.1) return { fx: 0, fy: 0 };
+    
+    // Calculate force magnitude according to Newton's law of gravitation
+    const forceMagnitude = this.G * planet1.mass * planet2.mass / (distance * distance);
+    
+    // Calculate force components
+    const forceX = forceMagnitude * dx / distance;
+    const forceY = forceMagnitude * dy / distance;
+    
+    return { fx: forceX, fy: forceY };
+  }
+
+  // Update planet velocities and positions
+  update() {
+    // Calculate forces and update velocities
+    for (let i = 0; i < this.planets.length; i++) {
+      let totalForceX = 0;
+      let totalForceY = 0;
+      
+      for (let j = 0; j < this.planets.length; j++) {
+        if (i === j) continue; // Skip self
+        
+        const { fx, fy } = this.calculateGravitationalForce(this.planets[i], this.planets[j]);
+        totalForceX += fx;
+        totalForceY += fy;
+      }
+      
+      // Calculate acceleration (F = ma, so a = F/m)
+      const accelerationX = totalForceX / this.planets[i].mass;
+      const accelerationY = totalForceY / this.planets[i].mass;
+      
+      // Update velocity using acceleration
+      this.planets[i].velocityX += accelerationX * this.timeStep;
+      this.planets[i].velocityY += accelerationY * this.timeStep;
+    }
+    
+    // Update positions using velocities
+    for (let i = 0; i < this.planets.length; i++) {
+      this.planets[i].x += this.planets[i].velocityX * this.timeStep;
+      this.planets[i].y += this.planets[i].velocityY * this.timeStep;
+    }
+  }
+
+  // Draw all planets
+  draw() {
+    // Clear canvas
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    // Draw each planet
+    for (const planet of this.planets) {
+      planet.draw(this.ctx);
+    }
+  }
+
+  // Main simulation loop
+  start() {
+    const loop = () => {
+      this.update();
+      this.draw();
+      requestAnimationFrame(loop);
+    };
+    
+    loop();
+  }
+}
+
+// Initialize the simulation when the page loads
+window.onload = function() {
+  // Create a canvas element if it doesn't exist
+  if (!document.getElementById('gravityCanvas')) {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'gravityCanvas';
+    canvas.style.display = 'block';
+    canvas.style.margin = '0 auto';
+    canvas.style.background = '#000';
+    document.body.appendChild(canvas);
+  }
+
+  const simulation = new GravitySimulation('gravityCanvas');
+  
+  // Add some planets to the simulation
+  // Parameters: x, y, mass, velocityX, velocityY, color
+  simulation.addPlanet(300, 300, 500, 0, 0, '#FFD700'); // Large central "sun"
+  simulation.addPlanet(300, 150, 10, 2, 0, '#3498db'); // Smaller planet in orbit
+  simulation.addPlanet(500, 300, 20, 0, 1.5, '#e74c3c'); // Another planet
+  
+  // Start the simulation
+  simulation.start();
+};
+    </script>
+  </body>
+</html>
