@@ -9,21 +9,41 @@
 
       let canvas = $("content");
       let ctx = canvas.getContext("2d");
-      function circle(x,y,r,fill){
-        ctx.beginPath();
-        ctx.arc(x,y,r,0,2*Math.PI);
-        ctx.fillStyle = fill;
-        ctx.fill();
+      let circles = [];
+      class circle{
+        constructor(x,y,r,fill){
+          this.x = x;
+          this.y = y;
+          this.r = r;
+          this.angle = 0;
+          this.fill = fill;
+          circles = [...circles, this];
+        }
+        draw(){
+          ctx.beginPath();
+          ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+          ctx.fillStyle = this.fill;
+          ctx.fill();
+        }
+        attract(x,y,stopDist){
+          let angle = Math.atan2(y-this.y,x-this.x);
+          this.angle = angle;
+          function moveLoop(){
+            let dist = Math.sqrt( Math.pow(Math.abs(this.x - x),2) + Math.pow(Math.abs(this.y - y),2) )
+            if(dist > stopDist)return;
+            this.x+=Math.cos(this.angle);
+            this.y+=Math.cos(this.angle);
+            setTimeout(moveLoop,2);
+          }
+          moveLoop();
+        }
       }
-      let planets = [];
-      function planet(){
-        
-      }
+      //let angle = Math.atan2(y2-y1,x2-x1) * 180/Math.PI;
+      let c1 = new circle(400,300,10,"red");
+      let c2 = new circle(100,100,30,"orange");
       function draw(){
         ctx.clearRect(0,0,canvas.width,canvas.height);
-
-        circle(400,300,10,"orange");
-        
+        circles.forEach(circle => {circle.draw();});
         setTimeout(draw,2);
       }
       draw();
