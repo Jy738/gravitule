@@ -15,7 +15,11 @@
       let canvas = $("content");
       let ctx = canvas.getContext("2d");
       let circles = [];
-      let rules = {size:{red:10,orange:10,yellow:10},"red":["yellow","red"],orange:["yellow"],yellow:["orange","red"]}
+      let rules = {
+        size:{red:10,orange:10,yellow:10},
+        power:{red:10,orange:20,yellow:30},
+        "red":["yellow","red"],orange:["yellow"],yellow:["orange","red"]
+      }
       class circle{
         constructor(x,y,r,fill){
           this.x = x;
@@ -26,6 +30,7 @@
           this.dist = 20;
           this.angle = Math.floor(Math.random() * 360);
           this.allowForce = true;
+          this.power = rules.power[fill]
           this.fill = fill;
           circles = [...circles, this];
         }
@@ -37,8 +42,10 @@
           if(this.x < 0)this.x = canvas.width;
           for(let i=0;i<circles.length;i++){
             if(collision({x:this.x,y:this.y,r:this.r*2},{x:circles[i].x,y:circles[i].y,r:circles[i].r})){
-              if(rules[this.fill].includes(circles[i].fill)){this.attract(circles[i].x,circles[i].y,(world.density*2)*100);}else{
-                this.repel(circles[i].x,circles[i].y,(world.density*2)*100);
+              if(rules[this.fill].includes(circles[i].fill) && circles[i].power > this.power){
+                this.attract(circles[i].x,circles[i].y,(world.density*2)*100);
+              }else{
+                if(circles[i].power > this.power)this.repel(circles[i].x,circles[i].y,(world.density*2)*100);
               }
             }
           }
