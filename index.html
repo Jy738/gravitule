@@ -43,19 +43,20 @@
           this.x+=Math.cos(this.angle)*this.velocity;
           this.y+=Math.sin(this.angle)*this.velocity;
         }
-        repel(x2,y2,stopDist){
+        repel(x2,y2,startDist){
           let ylen = y2-this.y;
           let xlen = x2-this.x;
           this.angle = 0-Math.atan2(ylen,xlen) * 180/Math.PI;
           this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
-          if(this.dist > stopDist) {
-            this.velocity = Math.min(1, this.dist / 120); // Scale velocity by distance
+          if(this.dist < startDist) {
+            this.velocity-=0.003;
+            this.x-=Math.cos(this.angle)*this.velocity;
+            this.y-=Math.sin(this.angle)*this.velocity;// Scale velocity by distance
           } else {
-            this.velocity = 0;
+            this.velocity = 1;
             return;
           }
-          this.x-=Math.cos(this.angle)*this.velocity;
-          this.y-=Math.sin(this.angle)*this.velocity;
+          
         }
       }
       canvas.addEventListener('mousemove', function(e) {
