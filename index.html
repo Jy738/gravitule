@@ -8,9 +8,11 @@
       </style>
    </head>
    <body>
-     <canvas id="content" width="800" height="600"></canvas>
-      <button onclick="spawnbunch()">Spawn Triplet</button>
+      <button onclick="spawnbunch()">Spawn Triplet</button><br>
       <div class="inrow">Time Step: <input type="range" onmouseup="world.timestep = this.value;" min="1" max="10" step="0.1" value="1"></div>
+     <hr>
+         <canvas id="content" width="800" height="600"></canvas>
+      
      <script>
        function $(a){return document.getElementById(a)}
        Math.squared = (a) => {return a*a}
