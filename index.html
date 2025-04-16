@@ -1,104 +1,97 @@
 <!DOCTYPE html><html>
-  <head>
-    <title>Gravitule</title>
-  </head>
-  <body>
-    <canvas id="content" width="800" height="600"></canvas>
-    <script>
-      function $(a){return document.getElementById(a)}
-      Math.squared = (a) => {return a*a}
-      function collision(a,b){
-        let dist = Math.sqrt(Math.squared(b.x - a.x) + Math.squared(b.y - a.y));
-        return dist < a.r + b.r;
-      }
-      let world = {density:0.1}
-      let canvas = $("content");
-      let ctx = canvas.getContext("2d");
-      let circles = [];
-      let rules = {
-        size:{red:10,orange:10,yellow:10},
-        power:{red:10,orange:20,yellow:30},
-        "red":["yellow","red"],orange:["yellow"],yellow:["orange","red"]
-      }
-      class circle{
-        constructor(x,y,r,fill){
-          this.x = x;
-          this.y = y;
-          this.r = r;
-          this.velocity = 1;
-          this.drag = 3 * 0.001;
-          this.dist = 20;
-          this.angle = Math.floor(Math.random() * 360);
-          this.allowForce = true;
-          this.power = rules.power[fill]
-          this.fill = fill;
-          circles = [...circles, this];
-        }
-        draw(){
-          ctx.beginPath();
-          if(this.x > canvas.width)this.x = 0;
-          if(this.y > canvas.height)this.y = 0;
-          if(this.y < 0)this.y = canvas.height;
-          if(this.x < 0)this.x = canvas.width;
-          for(let i=0;i<circles.length;i++){
-            if(collision({x:this.x,y:this.y,r:this.r*2},{x:circles[i].x,y:circles[i].y,r:circles[i].r})){
-              if(rules[this.fill].includes(circles[i].fill) && circles[i].power > this.power){
-                this.attract(circles[i].x,circles[i].y,(world.density*2)*100);
-              }else{
-                if(circles[i].power > this.power)this.repel(circles[i].x,circles[i].y,(world.density*2)*100);
-              }
-            }
-          }
-          ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
-          ctx.fillStyle = this.fill;
-          ctx.fill();
-        }
-        attract(x2,y2,stopDist){
-          let ylen = y2-this.y;
-          let xlen = x2-this.x;
-          this.angle = (Math.atan2(ylen,xlen) * 180/Math.PI);
-          this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
-          if(this.dist > stopDist && this.dist < (world.density*8)*100) {
-            this.velocity = Math.min(1, this.dist / 120); // Scale velocity by distance
-          } else {
-            this.velocity = 0;
-            return;
-          }
-          this.x+=Math.cos(this.angle)*this.velocity;
-          this.y+=Math.sin(this.angle)*this.velocity;
-        }
-        repel(x2,y2,startDist){
-          let ylen = y2-this.y;
-          let xlen = x2-this.x;
-          this.angle = 0-Math.atan2(ylen,xlen) * 180/Math.PI;
-          this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
-          if(this.dist < startDist) {
-            this.velocity-=0.003;
-            this.x-=Math.cos(this.angle)*this.velocity;
-            this.y-=Math.sin(this.angle)*this.velocity;// Scale velocity by distance
-          } else {
-            this.velocity = 1;
-            return;
-          }
-          
-        }
-      }
-  
-      //let angle = Math.atan2(y2-y1,x2-x1) * 180/Math.PI;
-      let colorlist = ["red","orange","yellow"];
-      function spawnbunch(){
-        for(let i=0;i<colorlist.length;i++){
-          new circle(Math.floor(Math.random() * canvas.width),Math.floor(Math.random() * canvas.height),rules.size[colorlist[i]],colorlist[i])
-        }
-        }
-      function draw(){
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        circles.forEach(circle => {circle.draw();});
-        //c1.repel(c2.x,c2.y,100);
-        //console.log(`x: ${c1.x}, y:{c1.y}, angle: ${c1.angle}, dist: ${c1.dist}`);
-        setTimeout(draw,2);
-      }
-      draw();
-    </script>
-  </body>
-</html>
+   <head>
+     <title>Gravitule</title>
+   </head>
+   <body>
+     <canvas id="content" width="800" height="600"></canvas>
+     <script>
+       function $(a){return document.getElementById(a)}
+       Math.squared = (a) => {return a*a}
+       function collision(a,b){
+         let dist = Math.sqrt(Math.squared(b.x - a.x) + Math.squared(b.y - a.y));
+         return dist < a.r + b.r;
+       }
+       let world = {density:0.1}
+       let canvas = $("content");
+       let ctx = canvas.getContext("2d");
+       let circles = [];
+       let rules = {size:{red:10,orange:10,yellow:10},"red":["yellow","red"],orange:["yellow"],yellow:["orange","red"]}
+       class circle{
+         constructor(x,y,r,fill){
+           this.x = x;
+           this.y = y;
+           this.r = r;
+           this.velocity = 1;
+           this.drag = 3 * 0.001;
+           this.dist = 20;
+           this.angle = Math.floor(Math.random() * 360);
+           this.allowForce = true;
+           this.fill = fill;
+           circles = [...circles, this];
+         }
+         draw(){
+           ctx.beginPath();
+           if(this.x > canvas.width)this.x = 0;
+           if(this.y > canvas.height)this.y = 0;
+           if(this.y < 0)this.y = canvas.height;
+           if(this.x < 0)this.x = canvas.width;
+           for(let i=0;i<circles.length;i++){
+             if(collision({x:this.x,y:this.y,r:this.r*2},{x:circles[i].x,y:circles[i].y,r:circles[i].r})){
+               if(rules[this.fill].includes(circles[i].fill)){this.attract(circles[i].x,circles[i].y,(world.density*2)*100);}else{
+                 this.repel(circles[i].x,circles[i].y,(world.density*2)*100);
+               }
+             }
+           }
+           ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+           ctx.fillStyle = this.fill;
+           ctx.fill();
+         }
+         attract(x2,y2,stopDist){
+           let ylen = y2-this.y;
+           let xlen = x2-this.x;
+           this.angle = (Math.atan2(ylen,xlen) * 180/Math.PI);
+           this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
+           if(this.dist > stopDist && this.dist < (world.density*8)*100) {
+             this.velocity = Math.min(1, this.dist / 120); // Scale velocity by distance
+           } else {
+             this.velocity = 0;
+             return;
+           }
+           this.x+=Math.cos(this.angle)*this.velocity;
+           this.y+=Math.sin(this.angle)*this.velocity;
+         }
+         repel(x2,y2,startDist){
+           let ylen = y2-this.y;
+           let xlen = x2-this.x;
+           this.angle = 0-Math.atan2(ylen,xlen) * 180/Math.PI;
+           this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
+           if(this.dist < startDist) {
+             this.velocity-=0.003;
+             this.x-=Math.cos(this.angle)*this.velocity;
+             this.y-=Math.sin(this.angle)*this.velocity;// Scale velocity by distance
+           } else {
+             this.velocity = 1;
+             return;
+           }
+ 
+         }
+       }
+ 
+       //let angle = Math.atan2(y2-y1,x2-x1) * 180/Math.PI;
+       let colorlist = ["red","orange","yellow"];
+       function spawnbunch(){
+         for(let i=0;i<colorlist.length;i++){
+           new circle(Math.floor(Math.random() * canvas.width),Math.floor(Math.random() * canvas.height),rules.size[colorlist[i]],colorlist[i])
+         }
+         }
+       function draw(){
+         ctx.clearRect(0,0,canvas.width,canvas.height);
+         circles.forEach(circle => {circle.draw();});
+         //c1.repel(c2.x,c2.y,100);
+         //console.log(`x: ${c1.x}, y:{c1.y}, angle: ${c1.angle}, dist: ${c1.dist}`);
+         setTimeout(draw,2);
+       }
+       draw();
+     </script>
+   </body>
+ </html>
