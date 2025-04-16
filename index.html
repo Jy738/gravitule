@@ -38,7 +38,7 @@
           angle: ${this.angle}
           `);
           if(!this.allowForce)return;
-          if(dist > stopDist)return;
+          if(dist < stopDist)return;
           this.angle = angle;
           this.x+=Math.cos(this.angle);
           this.y+=Math.cos(this.angle);
