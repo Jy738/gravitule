@@ -30,7 +30,13 @@
           var x = x2;
           var y = y2;
           let dist = Math.sqrt( Math.pow(Math.abs(this.x - x),2) + Math.pow(Math.abs(this.y - y),2) );
-          let angle = Math.atan2(y-this.y,x-this.x);
+          let angle = Math.atan2(y-this.y,x-this.x) * 180/Math.PI;
+          console.log(`
+          x: ${x}
+          y: ${y}
+          dist: ${dist}
+          angle: ${this.angle}
+          `);
           if(!this.allowForce)return;
           if(dist > stopDist)return;
           this.angle = angle;
