@@ -11,7 +11,7 @@
          let dist = Math.sqrt(Math.squared(b.x - a.x) + Math.squared(b.y - a.y));
          return dist < a.r + b.r;
        }
-       let world = {density:0.1}
+       let world = {density:0.1,timestep:2}
        let canvas = $("content");
        let ctx = canvas.getContext("2d");
        let circles = [];
@@ -58,8 +58,8 @@
              this.velocity = 0;
              return;
            }
-           this.x+=Math.cos(this.angle)*this.velocity;
-           this.y+=Math.sin(this.angle)*this.velocity;
+           this.x+=(Math.cos(this.angle)*this.velocity)*world.timestep;
+           this.y+=(Math.sin(this.angle)*this.velocity)*world.timestep;
          }
          repel(x2,y2,startDist){
            let ylen = y2-this.y;
