@@ -106,6 +106,10 @@
         document.onkeydown = (e) => {if(Object.keys(keylist).includes(e.key))keylist[e.key] = true;}
         document.onkeyup = (e) => {if(Object.keys(keylist).includes(e.key))keylist[e.key] = false;}
        function draw(){
+          if(keys.w)camera.y-=camera.speed;
+          if(keys.s)camera.y+=camera.speed;
+          if(keys.a)camera.x-=camera.speed;
+          if(keys.d)camera.x+=camera.speed;
          ctx.clearRect(0,0,canvas.width,canvas.height);
          circles.forEach(circle => {circle.draw();});
          //c1.repel(c2.x,c2.y,100);
