@@ -26,7 +26,9 @@
           ctx.fillStyle = this.fill;
           ctx.fill();
         }
-        attract(x,y,stopDist){
+        attract(x2,y2,stopDist){
+          var x = x2;
+          var y = y2;
           if(!this.allowForce)return;
           let angle = Math.atan2(y-this.y,x-this.x);
           this.angle = angle;
