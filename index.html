@@ -23,7 +23,7 @@
           this.velocity = 1;
           this.drag = 3 * 0.001;
           this.dist = 20;
-          this.angle = 0;
+          this.angle = Math.floor(Math.random() * 360);
           this.allowForce = true;
           this.fill = fill;
           circles = [...circles, this];
