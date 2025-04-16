@@ -45,7 +45,7 @@
         ctx.clearRect(0,0,canvas.width,canvas.height);
         circles.forEach(circle => {circle.draw();});
         c1.attract(c2.x,c2.y,10);
-        console.log(`x: ${c1.x}, y:{c1.y}, angle: ${c1.angle}, dist: ${c1.dist}`);
+        //console.log(`x: ${c1.x}, y:{c1.y}, angle: ${c1.angle}, dist: ${c1.dist}`);
         setTimeout(draw,2);
       }
       draw();
