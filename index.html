@@ -16,7 +16,7 @@
           this.y = y;
           this.r = r;
           this.velocity = 1;
-          this.drag = 3 * 0.001
+          this.drag = 3 * 0.001;
           this.dist = 20;
           this.angle = 0;
           this.allowForce = true;
@@ -34,7 +34,7 @@
           let xlen = x2-this.x;
           let angle = Math.atan2(ylen,xlen) * 180/Math.PI;
           this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
-          if(this.dist > stopDist && this.velocity > 0)this.velocity-=0.001;
+          if(this.dist > stopDist && this.velocity > 0)this.velocity-=this.drag;
           if(this.dist < stopDist){this.velocity = 1; return;}
           this.angle = angle;
           this.x+=Math.cos(this.angle)*this.velocity;
