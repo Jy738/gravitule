@@ -31,7 +31,8 @@
           let xlen = x2-this.x;
           let angle = Math.atan2(ylen,xlen) * 180/Math.PI;
           let dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
-          console.log(`x: ${this.x}, y:{this.y}, angle: ${this.angle}`);
+          console.log(`x: ${this.x}, y:{this.y}, angle: ${this.angle}, dist: ${dist}`);
+          if(dist < stopDist)return;
           this.angle = angle;
           this.x+=Math.cos(this.angle);
           this.y+=Math.sin(this.angle);
