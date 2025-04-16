@@ -35,7 +35,7 @@
           this.angle = Math.atan2(ylen,xlen) * 180/Math.PI;
           this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
           if(this.dist > stopDist) {
-            this.velocity = Math.min(1, this.dist / 100); // Scale velocity by distance
+            this.velocity = Math.min(1, this.dist / 120); // Scale velocity by distance
           } else {
             this.velocity = 0;
             return;
