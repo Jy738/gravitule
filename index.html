@@ -39,9 +39,9 @@
               let circlecurrent = circles[i];
               if(collision(this,circlecurrent)){
                if(rules[this.fill].includes(circlecurrent.fill)){
-                  this.attract(circlecurrent.x,circlecurrent.y,(world.density*2)*100);
+                  this.attract(circlecurrent.x,circlecurrent.y,3);
                }else{
-                 this.repel(circlecurrent.x,circlecurrent.y,(world.density*2)*100);
+                 this.repel(circlecurrent.x,circlecurrent.y,3);
                }
              }
            }
