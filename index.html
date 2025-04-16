@@ -15,7 +15,7 @@
        let canvas = $("content");
        let ctx = canvas.getContext("2d");
        let circles = [];
-       let rules = {size:{red:10,orange:10,yellow:10},"red":["yellow","red"],orange:["yellow"],yellow:["orange","red"]}
+       let rules = {size:{red:10,orange:10,yellow:10},power:{red:1,orange:2,yellow:3},"red":["yellow","red"],orange:["yellow"],yellow:["orange","red"]}
        class circle{
          constructor(x,y,r,fill){
            this.x = x;
@@ -27,6 +27,7 @@
            this.angle = Math.floor(Math.random() * 360);
            this.allowForce = true;
            this.fill = fill;
+           this.power = rules.power[fill];
            circles = [...circles, this];
          }
          draw(){
@@ -38,10 +39,10 @@
            for(let i=0;i<circles.length;i++){
               let circlecurrent = circles[i];
               if(collision(this,circlecurrent)){
-               if(rules[this.fill].includes(circlecurrent.fill)){
+               if(rules[this.fill].includes(circlecurrent.fill) && this.power < circlecurrent.power){
                   this.attract(circlecurrent.x,circlecurrent.y,3);
                }else{
-                 this.repel(circlecurrent.x,circlecurrent.y,3);
+                 if(this.power < circlecurrent.power)this.repel(circlecurrent.x,circlecurrent.y,3);
                }
              }
            }
@@ -69,7 +70,7 @@
            this.angle = 0-Math.atan2(ylen,xlen) * 180/Math.PI;
            this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
            if(this.dist < startDist) {
-             if(this.velocity > 0)this.velocity-=0.003;
+             if(this.velocity >= 0)this.velocity-=0.003;
               else this.velocity = 0;
              this.x-=Math.cos(this.angle)*this.velocity;
              this.y-=Math.sin(this.angle)*this.velocity;// Scale velocity by distance
