@@ -16,6 +16,7 @@
           this.y = y;
           this.r = r;
           this.angle = 0;
+          this.allowForce = true;
           this.fill = fill;
           circles = [...circles, this];
         }
@@ -26,6 +27,7 @@
           ctx.fill();
         }
         attract(x,y,stopDist){
+          if(!this.allowForce)return;
           let angle = Math.atan2(y-this.y,x-this.x);
           this.angle = angle;
           function moveLoop(){
@@ -41,7 +43,7 @@
       //let angle = Math.atan2(y2-y1,x2-x1) * 180/Math.PI;
       let c1 = new circle(400,300,10,"red");
       let c2 = new circle(100,100,30,"orange");
-      c1.attract
+      c1.attract(c2.x,c2.y,3);
       function draw(){
         ctx.clearRect(0,0,canvas.width,canvas.height);
         circles.forEach(circle => {circle.draw();});
