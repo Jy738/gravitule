@@ -72,8 +72,8 @@
            if(this.dist < startDist) {
              if(this.velocity >= 0)this.velocity-=0.003;
               else this.velocity = 0;
-             this.x-=Math.cos(this.angle)*this.velocity;
-             this.y-=Math.sin(this.angle)*this.velocity;// Scale velocity by distance
+             this.x-=(Math.cos(this.angle)*this.velocity)*world.timestep;
+             this.y-=(Math.sin(this.angle)*this.velocity)*world.timestep;// Scale velocity by distance
            } else {
              this.velocity = 1;
              return;
