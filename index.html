@@ -7,9 +7,14 @@
     <script>
       function $(a){return document.getElementById(a)}
       Math.squared = (a) => {return a*a}
+      function collision(a,b){
+        let dist = Math.sqrt(Math.squared(b.x - a.x) + Math.squared(b.y - a.y));
+        return dist < a.r + b.r;
+      }
       let canvas = $("content");
       let ctx = canvas.getContext("2d");
       let circles = [];
+      let rules = {size:{red:10,orange:20,yellow:40},"red":["yellow"],orange:["yellow","red"],yellow:["orange"]}
       class circle{
         constructor(x,y,r,fill){
           this.x = x;
@@ -29,6 +34,13 @@
           if(this.y > canvas.height)this.y = 0;
           if(this.y < 0)this.y = canvas.height;
           if(this.x < 0)this.x = canvas.width;
+          for(let i=0;i<circles.length;i++){
+            if(collision({x:this.x,y:this.y,r:this.r*2},{x:circles[i].x,y:circles[i].y,r:circles[i].r})){
+              if(rules[this.fill].includes(circles[i].fill)){this.attract(circles[i].x,circles[i].y,40);}else{
+                this.repel(circles[i].x,circles[i].y,140);
+              }
+            }
+          }
           ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
           ctx.fillStyle = this.fill;
           ctx.fill();
@@ -38,7 +50,7 @@
           let xlen = x2-this.x;
           this.angle = (Math.atan2(ylen,xlen) * 180/Math.PI);
           this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
-          if(this.dist > stopDist) {
+          if(this.dist > stopDist && this.dist < 200) {
             this.velocity = Math.min(1, this.dist / 120); // Scale velocity by distance
           } else {
             this.velocity = 0;
@@ -69,12 +81,16 @@
         c2.y = e.clientY - rect.top;
       });
       //let angle = Math.atan2(y2-y1,x2-x1) * 180/Math.PI;
-      let c1 = new circle(400,300,10,"red");
-      let c2 = new circle(100,100,30,"orange");
+      let colorlist = ["red","orange","yellow"];
+      function spawnbunch(){
+        for(let i=0;i<colorlist.length;i++){
+          new circle(Math.floor(Math.random() * canvas.width),Math.floor(Math.random() * canvas.height),rules.size[colorlist[i]],colorlist[i])
+        }
+        }
       function draw(){
         ctx.clearRect(0,0,canvas.width,canvas.height);
         circles.forEach(circle => {circle.draw();});
-        c1.repel(c2.x,c2.y,200);
+        c1.repel(c2.x,c2.y,100);
         //console.log(`x: ${c1.x}, y:{c1.y}, angle: ${c1.angle}, dist: ${c1.dist}`);
         setTimeout(draw,2);
       }
