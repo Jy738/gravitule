@@ -25,6 +25,10 @@
         }
         draw(){
           ctx.beginPath();
+          if(this.x > canvas.width)this.x = 0;
+          if(this.y > canvas.height)this.y = 0;
+          if(this.y < 0)this.y = canvas.height;
+          if(this.x < 0)this.x = canvas.width;
           ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
           ctx.fillStyle = this.fill;
           ctx.fill();
