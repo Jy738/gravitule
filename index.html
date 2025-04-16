@@ -11,6 +11,7 @@
         let dist = Math.sqrt(Math.squared(b.x - a.x) + Math.squared(b.y - a.y));
         return dist < a.r + b.r;
       }
+      let world = {density:0.1}
       let canvas = $("content");
       let ctx = canvas.getContext("2d");
       let circles = [];
@@ -36,8 +37,8 @@
           if(this.x < 0)this.x = canvas.width;
           for(let i=0;i<circles.length;i++){
             if(collision({x:this.x,y:this.y,r:this.r*2},{x:circles[i].x,y:circles[i].y,r:circles[i].r})){
-              if(rules[this.fill].includes(circles[i].fill)){this.attract(circles[i].x,circles[i].y,20);}else{
-                this.repel(circles[i].x,circles[i].y,20);
+              if(rules[this.fill].includes(circles[i].fill)){this.attract(circles[i].x,circles[i].y,(world.density*2)*100);}else{
+                this.repel(circles[i].x,circles[i].y,(world.density*2)*100);
               }
             }
           }
@@ -50,7 +51,7 @@
           let xlen = x2-this.x;
           this.angle = (Math.atan2(ylen,xlen) * 180/Math.PI);
           this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
-          if(this.dist > stopDist && this.dist < 80) {
+          if(this.dist > stopDist && this.dist < (world.density*8)*100) {
             this.velocity = Math.min(1, this.dist / 120); // Scale velocity by distance
           } else {
             this.velocity = 0;
