@@ -46,7 +46,7 @@
            if(condition.xmax)this.x = 0;
            if(condition.ymax)this.y = 0;
            if(condition.ymin)this.y = world.height;
-           if(condition.xmin)this.x = ;
+           if(condition.xmin)this.x = world.width;
            for(let i=0;i<circles.length;i++){
               let circlecurrent = circles[i];
               if(collision(this,circlecurrent)){
