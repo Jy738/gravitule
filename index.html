@@ -39,10 +39,10 @@
            for(let i=0;i<circles.length;i++){
               let circlecurrent = circles[i];
               if(collision(this,circlecurrent)){
-               if(rules[this.fill].includes(circlecurrent.fill) && this.power < circlecurrent.power){
+               if(rules[this.fill].includes(circlecurrent.fill) ){
                   this.attract(circlecurrent.x,circlecurrent.y,3);
                }else{
-                 if(this.power < circlecurrent.power)this.repel(circlecurrent.x,circlecurrent.y,3);
+                 this.repel(circlecurrent.x,circlecurrent.y,3);
                }
              }
            }
