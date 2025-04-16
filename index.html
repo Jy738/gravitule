@@ -33,7 +33,7 @@
           let xlen = x2-this.x;
           let angle = Math.atan2(ylen,xlen) * 180/Math.PI;
           this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
-          if(this.dist > stopDist && this.velocity > 0)this.velocity-=0.01;
+          if(this.dist > stopDist && this.velocity > 0)this.velocity-=0.001;
           if(this.dist < stopDist){this.velocity = 1; return;}
           this.angle = angle;
           this.x+=Math.cos(this.angle)*this.velocity;
