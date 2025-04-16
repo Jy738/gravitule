@@ -6,7 +6,7 @@
     <canvas id="content" width="800" height="600"></canvas>
     <script>
       function $(a){return document.getElementById(a)}
-
+      Math.squared = (a) => {return a*a}
       let canvas = $("content");
       let ctx = canvas.getContext("2d");
       let circles = [];
@@ -27,7 +27,11 @@
           ctx.fill();
         }
         attract(x2,y2,stopDist){
-          let angle = Math.atan2(y2-this.y,x2-this.x) * 180/Math.PI;
+          let ylen = y2-this.y;
+          let xlen = x2-this.x;
+          let angle = Math.atan2(ylen,xlen) * 180/Math.PI;
+          let dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
+          console.log(`x: ${this.x}, y:{this.y}, angle: ${this.angle}`);
           this.angle = angle;
           this.x+=Math.cos(this.angle);
           this.y+=Math.sin(this.angle);
