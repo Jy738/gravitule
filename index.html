@@ -32,7 +32,7 @@
         attract(x2,y2,stopDist){
           let ylen = y2-this.y;
           let xlen = x2-this.x;
-          this.angle = 0-(Math.atan2(ylen,xlen) * 180/Math.PI);
+          this.angle = (Math.atan2(ylen,xlen) * 180/Math.PI);
           this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
           if(this.dist > stopDist) {
             this.velocity = Math.min(1, this.dist / 120); // Scale velocity by distance
@@ -46,7 +46,7 @@
         repel(x2,y2,stopDist){
           let ylen = y2-this.y;
           let xlen = x2-this.x;
-          this.angle = Math.atan2(ylen,xlen) * 180/Math.PI;
+          this.angle = 0-Math.atan2(ylen,xlen) * 180/Math.PI;
           this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
           if(this.dist > stopDist) {
             this.velocity = Math.min(1, this.dist / 120); // Scale velocity by distance
