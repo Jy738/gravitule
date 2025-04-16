@@ -37,7 +37,13 @@
            if(this.x < 0)this.x = canvas.width;
            for(let i=0;i<circles.length;i++){
               let circlecurrent = circles[i];
-             
+              if(collision(this,circlecurrent)){
+               if(rules[this.fill].includes(circlecurrent.fill)){
+                  this.attract(circlecurrent.x,circlecurrent.y,(world.density*2)*100);
+               }else{
+                 this.repel(circlecurrent.x,circlecurrent.y,(world.density*2)*100);
+               }
+             }
            }
            ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
            ctx.fillStyle = this.fill;
