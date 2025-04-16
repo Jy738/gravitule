@@ -15,7 +15,7 @@
       let canvas = $("content");
       let ctx = canvas.getContext("2d");
       let circles = [];
-      let rules = {size:{red:10,orange:10,yellow:10},"red":["yellow"],orange:["yellow","red"],yellow:["orange"]}
+      let rules = {size:{red:10,orange:10,yellow:10},"red":["yellow","red"],orange:["yellow"],yellow:["orange","red"]}
       class circle{
         constructor(x,y,r,fill){
           this.x = x;
