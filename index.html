@@ -75,11 +75,7 @@
           
         }
       }
-      canvas.addEventListener('mousemove', function(e) {
-        let rect = canvas.getBoundingClientRect();
-        c2.x = e.clientX - rect.left;
-        c2.y = e.clientY - rect.top;
-      });
+  
       //let angle = Math.atan2(y2-y1,x2-x1) * 180/Math.PI;
       let colorlist = ["red","orange","yellow"];
       function spawnbunch(){
