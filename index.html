@@ -29,11 +29,11 @@
         attract(x2,y2,stopDist){
           var x = x2;
           var y = y2;
-          if(!this.allowForce)return;
+          let dist = Math.sqrt( Math.pow(Math.abs(this.x - x),2) + Math.pow(Math.abs(this.y - y),2) );
           let angle = Math.atan2(y-this.y,x-this.x);
-          this.angle = angle;
-          let dist = Math.sqrt( Math.pow(Math.abs(this.x - x),2) + Math.pow(Math.abs(this.y - y),2) )
+          if(!this.allowForce)return;
           if(dist > stopDist)return;
+          this.angle = angle;
           this.x+=Math.cos(this.angle);
           this.y+=Math.cos(this.angle);
         }
