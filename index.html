@@ -20,7 +20,8 @@
          let dist = Math.sqrt(Math.squared(b.x - a.x) + Math.squared(b.y - a.y));
          return dist < a.r + b.r;
        }
-       let world = {density:0.1,timestep:2}
+        let camera = {x:0,y:0,speed:1}
+       let world = {density:0.1,timestep:2,width:1400,height:1400}
        let canvas = $("content");
        let ctx = canvas.getContext("2d");
        let circles = [];
@@ -40,11 +41,12 @@
            circles = [...circles, this];
          }
          draw(){
-           ctx.beginPath();
-           if(this.x > canvas.width)this.x = 0;
-           if(this.y > canvas.height)this.y = 0;
-           if(this.y < 0)this.y = canvas.height;
-           if(this.x < 0)this.x = canvas.width;
+            let condition = {xmax:this.x > world.width,ymax:this.y > world.height,xmin:this.x <0,ymin:this.y < 0}
+           
+           if(condition.xmax)this.x = 0;
+           if(condition.ymax)this.y = 0;
+           if(condition.ymin)this.y = world.height;
+           if(condition.xmin)this.x = ;
            for(let i=0;i<circles.length;i++){
               let circlecurrent = circles[i];
               if(collision(this,circlecurrent)){
@@ -55,7 +57,8 @@
                }
              }
            }
-           ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+           ctx.beginPath();
+           ctx.arc(this.x-camera.x,this.y-camera.y,this.r,0,2*Math.PI);
            ctx.fillStyle = this.fill;
            ctx.fill();
          }
@@ -95,10 +98,13 @@
        let colorlist = ["red","orange","yellow"];
        function spawnbunch(){
          for(let i=0;i<colorlist.length;i++){
-           new circle(Math.floor(Math.random() * canvas.width),Math.floor(Math.random() * canvas.height),rules.size[colorlist[i]],colorlist[i])
+           new circle(Math.floor(Math.random() * world.width),Math.floor(Math.random() * world.height),rules.size[colorlist[i]],colorlist[i])
          }
          }
         for(let q=0;q<5;q++){spawnbunch()}
+        let keylist = {w:false,a:false,s:false,d:false}
+        document.onkeydown = (e) => {if(Object.keys(keylist).includes(e.key))keylist[e.key] = true;}
+        document.onkeyup = (e) => {if(Object.keys(keylist).includes(e.key))keylist[e.key] = false;}
        function draw(){
          ctx.clearRect(0,0,canvas.width,canvas.height);
          circles.forEach(circle => {circle.draw();});
