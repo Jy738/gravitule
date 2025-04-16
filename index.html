@@ -27,21 +27,10 @@
           ctx.fill();
         }
         attract(x2,y2,stopDist){
-          var x = x2;
-          var y = y2;
-          let dist = Math.sqrt( Math.pow(Math.abs(this.x - x),2) + Math.pow(Math.abs(this.y - y),2) );
-          let angle = Math.atan2(y-this.y,x-this.x) * 180/Math.PI;
-          console.log(`
-          x: ${x}
-          y: ${y}
-          dist: ${dist}
-          angle: ${this.angle}
-          `);
-          if(!this.allowForce)return;
-          if(dist < stopDist)return;
+          let angle = Math.atan2(y2-this.y,x2-this.x) * 180/Math.PI;
           this.angle = angle;
           this.x+=Math.cos(this.angle);
-          this.y+=Math.cos(this.angle);
+          this.y+=Math.sin(this.angle);
         }
       }
       //let angle = Math.atan2(y2-y1,x2-x1) * 180/Math.PI;
