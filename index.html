@@ -1,122 +1,126 @@
-<!DOCTYPE html><html>
-   <head>
-     <title>Gravitule</title>
-      <style>
-         .inrow {
-            display:flex;flex-direction:row;
-         }
-      </style>
-   </head>
-   <body>
-      <button onclick="spawnbunch()">Spawn Triplet</button><br>
-      <div class="inrow">Time Step: <input type="range" onmouseup="world.timestep = this.value;" min="1" max="10" step="0.1" value="1"></div>
-     <hr>
-         <canvas id="content" width="800" height="600"></canvas>
-      
-     <script>
-       function $(a){return document.getElementById(a)}
-       Math.squared = (a) => {return a*a}
-       function collision(a,b){
-         let dist = Math.sqrt(Math.squared(b.x - a.x) + Math.squared(b.y - a.y));
-         return dist < a.r + b.r;
-       }
-        let camera = {x:0,y:0,speed:1}
-       let world = {density:0.1,timestep:2,width:1400,height:1400}
-       let canvas = $("content");
-       let ctx = canvas.getContext("2d");
-       let circles = [];
-       let rules = {size:{red:10,orange:10,yellow:10},power:{red:1,orange:2,yellow:3},"red":["yellow","red"],orange:["yellow"],yellow:["orange","red"]}
-       class circle{
-         constructor(x,y,r,fill){
-           this.x = x;
-           this.y = y;
-           this.r = r;
-           this.velocity = 1;
-           this.drag = 3 * 0.001;
-           this.dist = 20;
-           this.angle = Math.floor(Math.random() * 360);
-           this.allowForce = true;
-           this.fill = fill;
-           this.power = 10;//rules.power[fill];
-           circles = [...circles, this];
-         }
-         draw(){
-            let condition = {xmax:this.x > world.width,ymax:this.y > world.height,xmin:this.x <0,ymin:this.y < 0}
-           
-           if(condition.xmax)this.x = 0;
-           if(condition.ymax)this.y = 0;
-           if(condition.ymin)this.y = world.height;
-           if(condition.xmin)this.x = world.width;
-           for(let i=0;i<circles.length;i++){
-              let circlecurrent = circles[i];
-              if(collision(this,circlecurrent)){
-               if(rules[this.fill].includes(circlecurrent.fill) ){
-                  this.attract(circlecurrent.x,circlecurrent.y,3);
-               }else{
-                 this.repel(circlecurrent.x,circlecurrent.y,3);
-               }
-             }
-           }
-           ctx.beginPath();
-           ctx.arc(this.x-camera.x,this.y-camera.y,this.r,0,2*Math.PI);
-           ctx.fillStyle = this.fill;
-           ctx.fill();
-         }
-         attract(x2,y2,stopDist){
-           let ylen = y2-this.y;
-           let xlen = x2-this.x;
-           this.angle = (Math.atan2(ylen,xlen) * 180/Math.PI);
-           this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
-           if(this.dist > stopDist && this.dist < (world.density*8)*100) {
-             this.velocity = Math.min(1, this.dist / 120); // Scale velocity by distance
-           } else {
-             this.velocity = 0;
-             return;
-           }
-           this.x+=(Math.cos(this.angle)*this.velocity)*world.timestep;
-           this.y+=(Math.sin(this.angle)*this.velocity)*world.timestep;
-         }
-         repel(x2,y2,startDist){
-           let ylen = y2-this.y;
-           let xlen = x2-this.x;
-           this.angle = 0-Math.atan2(ylen,xlen) * 180/Math.PI;
-           this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
-           if(this.dist < startDist) {
-             if(this.velocity >= 0)this.velocity-=0.003;
-              else this.velocity = 0;
-             this.x-=(Math.cos(this.angle)*this.velocity)*world.timestep;
-             this.y-=(Math.sin(this.angle)*this.velocity)*world.timestep;// Scale velocity by distance
-           } else {
-             this.velocity = 1;
-             return;
-           }
- 
-         }
-       }
- 
-       //let angle = Math.atan2(y2-y1,x2-x1) * 180/Math.PI;
-       let colorlist = ["red","orange","yellow"];
-       function spawnbunch(){
-         for(let i=0;i<colorlist.length;i++){
-           new circle(Math.floor(Math.random() * world.width),Math.floor(Math.random() * world.height),rules.size[colorlist[i]],colorlist[i])
-         }
-         }
-        for(let q=0;q<5;q++){spawnbunch()}
-        let keylist = {w:false,a:false,s:false,d:false}
-        document.onkeydown = (e) => {if(Object.keys(keylist).includes(e.key))keylist[e.key] = true;}
-        document.onkeyup = (e) => {if(Object.keys(keylist).includes(e.key))keylist[e.key] = false;}
-       function draw(){
-          if(keylist.w)camera.y-=camera.speed;
-          if(keylist.s)camera.y+=camera.speed;
-          if(keylist.a)camera.x-=camera.speed;
-          if(keylist.d)camera.x+=camera.speed;
-         ctx.clearRect(0,0,canvas.width,canvas.height);
-         circles.forEach(circle => {circle.draw();});
-         //c1.repel(c2.x,c2.y,100);
-         //console.log(`x: ${c1.x}, y:{c1.y}, angle: ${c1.angle}, dist: ${c1.dist}`);
-         setTimeout(draw,2);
-       }
-       draw();
-     </script>
-   </body>
- </html>
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Gravitule</title>
+     <style>body{background-color: black;color:white;font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; }
+        .inrow {
+          display:flex;flex-direction:row;
+        }
+     </style>
+  <body>
+     <button onclick="spawnbunch()">Spawn Triplet</button><br>
+     <div class="inrow" bis_skin_checked="1">Time Step: <input type="range" onmouseup="world.timestep = this.value;" min="1" max="10" step="0.1" value="1"></div>
+    <hr>
+        <canvas id="content" width="800" height="600"></canvas>
+     
+    <script>
+      function $(a){return document.getElementById(a)}
+      Math.squared = (a) => {return a*a}
+      function collision(a,b){
+        let dist = Math.sqrt(Math.squared(b.x - a.x) + Math.squared(b.y - a.y));
+        return dist < a.r + b.r;
+      }
+       let camera = {x:0,y:0,speed:1,zoom:1}
+      let world = {density:0.1,timestep:2,width:2500,height:2500}
+      let canvas = $("content");
+      let ctx = canvas.getContext("2d");
+      let circles = [];
+      let rules = {size:{red:10,orange:10,yellow:10,green:10,blue:10},power:{red:1,orange:2,yellow:3},"red":["yellow","red","green","blue"],orange:["yellow","green","blue"],yellow:["orange","red","green"],green:["green"],blue:["yellow","green","red"]}
+      class circle{
+        constructor(x,y,r,fill){
+          this.x = x;
+          this.y = y;
+          this.r = r;
+          this.velocity = 1;
+          this.drag = 3 * 0.001;
+          this.dist = 20;
+          this.angle = Math.floor(Math.random() * 360);
+          this.allowForce = true;
+          this.fill = fill;
+          this.power = 10;//rules.power[fill];
+          circles = [...circles, this];
+        }
+        draw(){
+           let condition = {xmax:this.x > world.width,ymax:this.y > world.height,xmin:this.x <0,ymin:this.y < 0}
+          
+          if(condition.xmax)this.x = 0;
+          if(condition.ymax)this.y = 0;
+          if(condition.ymin)this.y = world.height;
+          if(condition.xmin)this.x = world.width;
+          for(let i=0;i<circles.length;i++){
+             let circlecurrent = circles[i];
+             if(collision({x:this.x,y:this.y,r:this.r*3},{x:circlecurrent.x,y:circlecurrent.y,r:circlecurrent.r*3})){
+              if(rules[this.fill].includes(circlecurrent.fill) ){
+                 this.attract(circlecurrent.x,circlecurrent.y,30);
+              }else{
+                this.repel(circlecurrent.x,circlecurrent.y,40);
+              }
+            }
+          }
+          ctx.beginPath();
+          ctx.arc((this.x-camera.x)*camera.zoom,(this.y-camera.y)*camera.zoom,(this.r)*camera.zoom,0,2*Math.PI);
+          ctx.fillStyle = this.fill;
+          ctx.fill();
+        }
+        attract(x2,y2,stopDist){
+          let ylen = y2-this.y;
+          let xlen = x2-this.x;
+          this.angle = (Math.atan2(ylen,xlen) * 180/Math.PI);
+          this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
+          if(this.dist > stopDist && this.dist < (world.density*8)*100) {
+            this.velocity = Math.min(2, this.dist / 90); // Scale velocity by distance
+          } else {
+            this.velocity = 0;
+            return;
+          }
+          this.x+=(Math.cos(this.angle)*this.velocity)*world.timestep;
+          this.y+=(Math.sin(this.angle)*this.velocity)*world.timestep;
+        }
+        repel(x2,y2,startDist){
+          let ylen = y2-this.y;
+          let xlen = x2-this.x;
+          this.angle = 0-Math.atan2(ylen,xlen) * 180/Math.PI;
+          this.dist = Math.sqrt(Math.squared(xlen) + Math.squared(ylen));
+          if(this.dist < startDist) {
+            if(this.velocity >= 0)this.velocity-=0.003;
+             else this.velocity = 0;
+            this.x-=(Math.cos(this.angle * Math.PI / 180)*this.velocity)*world.timestep;
+            this.y-=(Math.sin(this.angle * Math.PI / 180)*this.velocity)*world.timestep;// Scale velocity by distance
+          } else {
+            this.velocity = 1;
+            return;
+          }
+
+        }
+      }
+
+      //let angle = Math.atan2(y2-y1,x2-x1) * 180/Math.PI;
+      let colorlist = ["red","orange","yellow","green","blue"];
+      function spawnbunch(){
+        for(let i=0;i<colorlist.length;i++){
+          new circle(Math.floor(Math.random() * world.width),Math.floor(Math.random() * world.height),rules.size[colorlist[i]],colorlist[i])
+        }
+        }
+       for(let q=0;q<5;q++){spawnbunch()}
+       let keylist = {w:false,a:false,s:false,d:false,q:false,e:false}
+       document.onkeydown = (e) => {if(Object.keys(keylist).includes(e.key))keylist[e.key] = true;}
+       document.onkeyup = (e) => {if(Object.keys(keylist).includes(e.key))keylist[e.key] = false;}
+      function draw(){
+         if(keylist.w)camera.y-=camera.speed;
+         if(keylist.s)camera.y+=camera.speed;
+         if(keylist.a)camera.x-=camera.speed;
+         if(keylist.d)camera.x+=camera.speed;
+         if(camera.zoom < 0.1)camera.zoom = 0.1;
+         if(keylist.q)camera.zoom-=camera.speed/50;
+         if(keylist.e)camera.zoom+=camera.speed/50;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        circles.forEach(circle => {circle.draw();});
+        //c1.repel(c2.x,c2.y,100);
+        //console.log(`x: ${c1.x}, y:{c1.y}, angle: ${c1.angle}, dist: ${c1.dist}`);
+        setTimeout(draw,2);
+      }
+      draw();
+    </script>
+  
+
+</body></html>
