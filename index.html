@@ -43,8 +43,7 @@
           circles = [...circles, this];
         }
         draw(){
-           let condition = {xmax:this.x > world.width,ymax:this.y > world.height,xmin:this.x <0,ymin:this.y < 0}
-          
+          let condition = {xmax:this.x > world.width,ymax:this.y > world.height,xmin:this.x <0,ymin:this.y < 0}
           if(condition.xmax)this.x = 0;
           if(condition.ymax)this.y = 0;
           if(condition.ymin)this.y = world.height;
@@ -59,9 +58,19 @@
               }
             }
           }
+          //gradient = ctx.createRadialGradient(cx,cy,0,cx,cy,cr)
+          //gradient.addColorStop(0,color)
+          //gradient.addColorStop(1,color2)
+          let gradient = ctx.createRadialGradient(
+              (this.x-camera.x)*camera.zoom,(this.y-camera.y)*camera.zoom,0,
+              (this.x-camera.x)*camera.zoom,(this.y-camera.y)*camera.zoom,this.r*camera.zoom
+          );
+          gradient.addColorStop(0,this.fill);
+          gradient.addColorStop(0.8,"black");
+          gradient.addColorStop(1,"white");
           ctx.beginPath();
           ctx.arc((this.x-camera.x)*camera.zoom,(this.y-camera.y)*camera.zoom,(this.r)*camera.zoom,0,2*Math.PI);
-          ctx.fillStyle = this.fill;
+          ctx.fillStyle = gradient;
           ctx.fill();
         }
         attract(x2,y2,stopDist){
